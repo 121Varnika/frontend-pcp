@@ -1,11 +1,9 @@
-// Checks token in localStorage; redirects to /login if missing
+// ProtectedRoute: redirects to /login if no token
 import { Navigate } from 'react-router-dom';
 
 function ProtectedRoute({ children }) {
   const token = localStorage.getItem('token');
-  if (!token) {
-    return <Navigate to="/login" replace />;
-  }
+  if (!token) return <Navigate to="/login" replace />;
   return children;
 }
 

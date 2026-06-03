@@ -1,46 +1,58 @@
-// Creates Context + Provider, wires up dispatch + state
+// Global AppContext — Context API + useReducer, exposes window.appState
 import { createContext, useReducer, useEffect, useContext } from 'react';
 import { issueReducer, initialState } from '../reducer/taskReducer';
-import { getAllIssues, getStats } from '../services/api';
 
-export const IssueContext = createContext();
+export const AppContext = createContext();
 
-export function IssueProvider({ children }) {
+export function AppProvider({ children }) {
   const [state, dispatch] = useReducer(issueReducer, initialState);
 
+  // Restore auth from localStorage on mount
   useEffect(() => {
     const token = localStorage.getItem('token');
-    if (!token) return;
-
-    const fetchData = async () => {
-      dispatch({ type: 'SET_LOADING', payload: true });
+    const user = localStorage.getItem('user');
+    if (token) {
+      dispatch({ type: 'SET_TOKEN', payload: token });
+    }
+    if (user) {
       try {
-        const issuesRes = await getAllIssues();
-        dispatch({ type: 'SET_ITEMS', payload: issuesRes.data || [] });
-
-        const statsRes = await getStats();
-        dispatch({ type: 'SET_STATS', payload: statsRes.data || null });
-      } catch (error) {
-        dispatch({ type: 'SET_ERROR', payload: error.message });
-      }
-    };
-
-    fetchData();
+        dispatch({ type: 'SET_AUTH_USER', payload: JSON.parse(user) });
+      } catch (e) { /* ignore parse errors */ }
+    }
   }, []);
 
+  // Expose window.appState for Playwright evaluation
+  useEffect(() => {
+    window.appState = {
+      authUser: state.authUser,
+      token: state.token,
+      users: state.users,
+      projects: state.projects,
+      issues: state.issues,
+      comments: state.comments,
+      filters: state.filters,
+      analytics: state.analytics
+    };
+  }, [state]);
+
   return (
-    <IssueContext.Provider value={{ ...state, dispatch }}>
+    <AppContext.Provider value={{ ...state, dispatch }}>
       {children}
-    </IssueContext.Provider>
+    </AppContext.Provider>
   );
 }
 
-export function useIssues() {
-  const context = useContext(IssueContext);
+export function useApp() {
+  const context = useContext(AppContext);
   if (!context) {
-    throw new Error('useIssues must be used within an IssueProvider');
+    throw new Error('useApp must be used within an AppProvider');
   }
   return context;
 }
 
-export default IssueContext;
+// Keep backward-compatible exports
+export const IssueContext = AppContext;
+export const IssueProvider = AppProvider;
+export const useIssues = useApp;
+
+export default AppContext;
