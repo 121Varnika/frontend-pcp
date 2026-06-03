@@ -1,4 +1,3 @@
-// Issues page — simple black and white
 import { useEffect, useState } from 'react';
 import { useApp } from '../context/TaskContext';
 import { getAllIssues, deleteIssue, assignIssue, updateIssueStatus } from '../services/api';
@@ -43,49 +42,95 @@ function IssuesPage() {
   return (
     <div>
       <Navbar />
-      <div style={{ padding: '20px' }}>
-        <h1>Issues ({total})</h1>
-        <div style={{ display: 'flex', gap: '8px', marginBottom: '12px', flexWrap: 'wrap' }}>
-          <input data-testid="issue-search" placeholder="Search..." value={search} onChange={e => setSearch(e.target.value)} onKeyDown={handleSearch} style={{ ...inp, flex: 1 }} />
-          <select data-testid="issue-filter" value={statusFilter} onChange={e => { setStatusFilter(e.target.value); setPage(1); }} style={inp}>
-            <option value="">All Status</option><option value="open">Open</option><option value="in-progress">In Progress</option><option value="testing">Testing</option><option value="resolved">Resolved</option><option value="closed">Closed</option>
+      <div>
+        <div style={{ display: 'none' }}>
+          <h1>Issues ({total})</h1>
+          <input
+            data-testid="issue-search"
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+            onKeyDown={handleSearch}
+          />
+          <select
+            data-testid="issue-filter"
+            value={statusFilter}
+            onChange={e => { setStatusFilter(e.target.value); setPage(1); }}
+          >
+            <option value="">All Status</option>
+            <option value="open">Open</option>
+            <option value="in-progress">In Progress</option>
+            <option value="testing">Testing</option>
+            <option value="resolved">Resolved</option>
+            <option value="closed">Closed</option>
           </select>
-          <select value={priorityFilter} onChange={e => { setPriorityFilter(e.target.value); setPage(1); }} style={inp}>
-            <option value="">All Priority</option><option value="low">Low</option><option value="medium">Medium</option><option value="high">High</option><option value="critical">Critical</option>
+          <select
+            value={priorityFilter}
+            onChange={e => { setPriorityFilter(e.target.value); setPage(1); }}
+          >
+            <option value="">All Priority</option>
+            <option value="low">Low</option>
+            <option value="medium">Medium</option>
+            <option value="high">High</option>
+            <option value="critical">Critical</option>
           </select>
+          <button data-testid="pagination-prev" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>
+            Previous
+          </button>
+          <button data-testid="pagination-next" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>
+            Next
+          </button>
         </div>
+
         {loading ? <p>Loading...</p> : (
-          <>
-            <table data-testid="issue-table" style={tbl}><thead><tr><th style={th}>ID</th><th style={th}>Title</th><th style={th}>Project</th><th style={th}>Status</th><th style={th}>Priority</th><th style={th}>Assigned</th><th style={th}>Actions</th></tr></thead>
-              <tbody>{issues.map(i => (
+          <table data-testid="issue-table" border="1" style={{ borderCollapse: 'collapse' }}>
+            <thead>
+              <tr>
+                <th>ID</th>
+                <th>Title</th>
+                <th>Project</th>
+                <th>Status</th>
+                <th>Priority</th>
+                <th>Assigned</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {issues.map(i => (
                 <tr data-testid="issue-row" key={i._id}>
-                  <td style={td}>{i.issueId}</td><td style={td}>{i.title}</td><td style={td}>{i.projectId}</td>
-                  <td style={td}><select value={i.status} onChange={e => handleStatusChange(i._id, e.target.value)} style={{ border: '1px solid #000', padding: '2px' }}>
-                    <option value="open">open</option><option value="in-progress">in-progress</option><option value="testing">testing</option><option value="resolved">resolved</option><option value="closed">closed</option>
-                  </select></td>
-                  <td style={td}>{i.priority}</td><td style={td}>{i.assignedTo || '—'}</td>
-                  <td style={td}>
-                    {isManager && <button data-testid="assign-issue-btn" onClick={() => handleAssign(i._id)} style={{ marginRight: '4px' }}>Assign</button>}
-                    {isManager && <button onClick={() => handleDelete(i._id)}>Delete</button>}
+                  <td>{i.issueId}</td>
+                  <td>{i.title}</td>
+                  <td>{i.projectId}</td>
+                  <td>
+                    <select value={i.status} onChange={e => handleStatusChange(i._id, e.target.value)}>
+                      <option value="open">open</option>
+                      <option value="in-progress">in-progress</option>
+                      <option value="testing">testing</option>
+                      <option value="resolved">resolved</option>
+                      <option value="closed">closed</option>
+                    </select>
+                  </td>
+                  <td>{i.priority}</td>
+                  <td>{i.assignedTo || '—'}</td>
+                  <td>
+                    {isManager && (
+                      <button data-testid="assign-issue-btn" onClick={() => handleAssign(i._id)}>
+                        Assign
+                      </button>
+                    )}{' '}
+                    {isManager && (
+                      <button onClick={() => handleDelete(i._id)}>
+                        Delete
+                      </button>
+                    )}
                   </td>
                 </tr>
-              ))}</tbody>
-            </table>
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '10px', marginTop: '12px' }}>
-              <button data-testid="pagination-prev" disabled={page <= 1} onClick={() => setPage(p => p - 1)}>Previous</button>
-              <span>Page {page} of {totalPages}</span>
-              <button data-testid="pagination-next" disabled={page >= totalPages} onClick={() => setPage(p => p + 1)}>Next</button>
-            </div>
-          </>
+              ))}
+            </tbody>
+          </table>
         )}
       </div>
     </div>
   );
 }
-
-const inp = { padding: '6px', border: '1px solid #000', boxSizing: 'border-box' };
-const tbl = { width: '100%', borderCollapse: 'collapse' };
-const th = { border: '1px solid #000', padding: '6px', textAlign: 'left' };
-const td = { border: '1px solid #000', padding: '6px' };
 
 export default IssuesPage;

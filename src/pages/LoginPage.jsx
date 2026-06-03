@@ -1,4 +1,3 @@
-// Login page — simple black and white
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { loginUser, registerUser } from '../services/api';
@@ -46,47 +45,84 @@ function LoginPage() {
   };
 
   return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', minHeight: '100vh' }}>
-      <form data-testid="login-form" onSubmit={handleSubmit} style={{ border: '1px solid #000', padding: '30px', width: '100%', maxWidth: '400px' }}>
-        <h2 style={{ marginBottom: '20px', textAlign: 'center' }}>{isRegister ? 'Register' : 'Login'}</h2>
-        {error && <p style={{ color: 'red', marginBottom: '12px' }}>{error}</p>}
+    <div>
+      <form data-testid="login-form" onSubmit={handleSubmit}>
+        <h2>{isRegister ? 'Register' : 'Login'}</h2>
+        {error && <p>{error}</p>}
+        
         {isRegister && (
-          <div style={field}>
+          <div>
             <label>Name</label><br />
-            <input data-testid="name-input" type="text" value={name} onChange={e => setName(e.target.value)} required style={inp} />
+            <input
+              data-testid="name-input"
+              type="text"
+              value={name}
+              onChange={e => setName(e.target.value)}
+              required
+            />
           </div>
         )}
-        <div style={field}>
+        
+        <div>
           <label>Email</label><br />
-          <input data-testid="email-input" type="email" value={email} onChange={e => setEmail(e.target.value)} required style={inp} />
+          <input
+            data-testid="email-input"
+            type="email"
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            required
+          />
         </div>
-        <div style={field}>
+        
+        <div>
           <label>Password</label><br />
-          <input data-testid="password-input" type="password" value={password} onChange={e => setPassword(e.target.value)} required style={inp} />
+          <input
+            data-testid="password-input"
+            type="password"
+            value={password}
+            onChange={e => setPassword(e.target.value)}
+            required
+          />
         </div>
+        
         {isRegister && (
           <>
-            <div style={field}>
+            <div>
               <label>Role</label><br />
-              <select data-testid="role-input" value={role} onChange={e => setRole(e.target.value)} style={inp}>
+              <select
+                data-testid="role-input"
+                value={role}
+                onChange={e => setRole(e.target.value)}
+              >
                 <option value="developer">Developer</option>
                 <option value="tester">Tester</option>
                 <option value="manager">Manager</option>
                 <option value="admin">Admin</option>
               </select>
             </div>
-            <div style={field}>
+            <div>
               <label>Department</label><br />
-              <input data-testid="department-input" type="text" value={department} onChange={e => setDepartment(e.target.value)} style={inp} />
+              <input
+                data-testid="department-input"
+                type="text"
+                value={department}
+                onChange={e => setDepartment(e.target.value)}
+              />
             </div>
           </>
         )}
-        <button data-testid="login-btn" type="submit" disabled={loading} style={{ width: '100%', padding: '8px', cursor: 'pointer', marginBottom: '10px' }}>
+        
+        <br />
+        <button data-testid="login-btn" type="submit" disabled={loading}>
           {loading ? 'Please wait...' : isRegister ? 'Register' : 'Login'}
         </button>
-        <p style={{ textAlign: 'center', margin: 0 }}>
-          <button data-testid="toggle-auth-btn" type="button" onClick={() => { setIsRegister(!isRegister); setError(''); }}
-            style={{ background: 'none', border: 'none', textDecoration: 'underline', cursor: 'pointer' }}>
+        
+        <p>
+          <button
+            data-testid="toggle-auth-btn"
+            type="button"
+            onClick={() => { setIsRegister(!isRegister); setError(''); }}
+          >
             {isRegister ? 'Already have an account? Login' : 'Need an account? Register'}
           </button>
         </p>
@@ -94,8 +130,5 @@ function LoginPage() {
     </div>
   );
 }
-
-const field = { marginBottom: '14px' };
-const inp = { width: '100%', padding: '6px', boxSizing: 'border-box', border: '1px solid #000' };
 
 export default LoginPage;

@@ -1,4 +1,3 @@
-// Add / Edit modal form with validation; includes data-testid attrs
 import { useState, useEffect } from 'react';
 
 function IssueModal({ issue, onSave, onClose }) {
@@ -43,56 +42,34 @@ function IssueModal({ issue, onSave, onClose }) {
     onSave(form);
   };
 
-  const overlayStyle = {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    background: 'rgba(0,0,0,0.3)',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 1000
-  };
-
-  const modalStyle = {
-    background: '#fff',
-    padding: '20px',
-    border: '2px solid #000',
-    width: '400px',
-    maxHeight: '90vh',
-    overflowY: 'auto'
-  };
-
   return (
-    <div style={overlayStyle} onClick={onClose}>
-      <div style={modalStyle} onClick={(e) => e.stopPropagation()}>
-        <h3 style={{ marginTop: 0 }}>{issue ? 'Edit Issue' : 'Add Issue'}</h3>
+    <div onClick={onClose}>
+      <div onClick={(e) => e.stopPropagation()}>
+        <h3>{issue ? 'Edit Issue' : 'Add Issue'}</h3>
         {error && <p style={{ color: 'red' }}>{error}</p>}
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Issue ID *</label>
+          <div>
+            <label>Issue ID *</label><br />
             <input name="issueId" value={form.issueId} onChange={handleChange} required disabled={!!issue} />
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Title *</label>
+          <div>
+            <label>Title *</label><br />
             <input name="title" value={form.title} onChange={handleChange} required />
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Project ID *</label>
+          <div>
+            <label>Project ID *</label><br />
             <input name="projectId" value={form.projectId} onChange={handleChange} required />
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Assigned To</label>
+          <div>
+            <label>Assigned To</label><br />
             <input name="assignedTo" value={form.assignedTo} onChange={handleChange} />
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Reported By</label>
+          <div>
+            <label>Reported By</label><br />
             <input name="reportedBy" value={form.reportedBy} onChange={handleChange} />
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Priority *</label>
+          <div>
+            <label>Priority *</label><br />
             <select name="priority" value={form.priority} onChange={handleChange} required>
               <option value="low">Low</option>
               <option value="medium">Medium</option>
@@ -100,16 +77,16 @@ function IssueModal({ issue, onSave, onClose }) {
               <option value="critical">Critical</option>
             </select>
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Severity *</label>
+          <div>
+            <label>Severity *</label><br />
             <select name="severity" value={form.severity} onChange={handleChange} required>
               <option value="minor">Minor</option>
               <option value="major">Major</option>
               <option value="critical">Critical</option>
             </select>
           </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label style={{ display: 'block' }}>Status *</label>
+          <div>
+            <label>Status *</label><br />
             <select name="status" value={form.status} onChange={handleChange} required>
               <option value="open">Open</option>
               <option value="in-progress">In Progress</option>
@@ -118,14 +95,12 @@ function IssueModal({ issue, onSave, onClose }) {
               <option value="closed">Closed</option>
             </select>
           </div>
-          <div style={{ marginTop: '15px' }}>
-            <button type="button" onClick={onClose} style={{ marginRight: '5px' }}>
+          <br />
+          <div>
+            <button type="button" onClick={onClose}>
               Cancel
-            </button>
-            <button
-              data-testid="save-task-btn"
-              type="submit"
-            >
+            </button>{' '}
+            <button data-testid="save-task-btn" type="submit">
               {issue ? 'Update' : 'Save'}
             </button>
           </div>

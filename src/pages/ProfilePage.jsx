@@ -1,4 +1,3 @@
-// Profile page — simple black and white
 import { useApp } from '../context/TaskContext';
 import Navbar from '../components/Navbar';
 
@@ -9,22 +8,31 @@ function ProfilePage() {
   return (
     <div>
       <Navbar />
-      <div style={{ padding: '20px', maxWidth: '500px' }}>
+      <div>
         <h1>My Profile</h1>
-        <table style={{ width: '100%', borderCollapse: 'collapse', marginTop: '16px' }}>
+        <table border="1" style={{ borderCollapse: 'collapse' }}>
           <tbody>
-            <tr><td style={th}>User ID</td><td style={td}>{authUser.userId}</td></tr>
-            <tr><td style={th}>Name</td><td style={td}>{authUser.name}</td></tr>
-            <tr><td style={th}>Email</td><td style={td}>{authUser.email}</td></tr>
-            <tr><td style={th}>Role</td><td style={td}>{authUser.role}</td></tr>
+            <tr>
+              <td>User ID</td>
+              <td>{authUser.userId}</td>
+            </tr>
+            <tr>
+              <td>Name</td>
+              <td>{authUser.name}</td>
+            </tr>
+            <tr>
+              <td>Email</td>
+              <td>{authUser.email}</td>
+            </tr>
+            <tr>
+              <td>Role</td>
+              <td>{authUser.role}</td>
+            </tr>
           </tbody>
         </table>
       </div>
     </div>
   );
 }
-
-const th = { border: '1px solid #000', padding: '8px', fontWeight: 'bold', background: '#eee' };
-const td = { border: '1px solid #000', padding: '8px' };
 
 export default ProfilePage;
